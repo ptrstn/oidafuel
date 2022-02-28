@@ -27,6 +27,6 @@ setup(
     author="Peter Stein",
     license="MIT",
     packages=["oidafuel"],
-    install_requires=[],
+    install_requires=["requests", "pyproj"],
     entry_points={"console_scripts": ["oidafuel=oidafuel.__main__:main"]},
 )

@@ -1,0 +1,6 @@
+[run]
+omit =
+    oidafuel/__main__.py
+    venv/*
+    tests/*
+    setup.py

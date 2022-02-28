@@ -1,6 +1,6 @@
 import argparse
 
-from packagename import __version__
+from oidafuel import __version__
 
 
 def parse_arguments():
