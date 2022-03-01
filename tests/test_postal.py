@@ -22,4 +22,4 @@ def test_load_postal_codes():
     postal_codes = load_postal_codes()
     assert postal_codes[0] == 1010
     assert postal_codes[12] == 1130
-    assert 3000 > len(postal_codes) > 2500
+    assert 3000 > len(postal_codes) > 2220

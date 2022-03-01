@@ -17,4 +17,4 @@ def extract_postal_codes(dataset: list[dict]) -> list[str]:
 def load_postal_codes():
     dataset = load_postal_code_dataset()
     postal_codes = extract_postal_codes(dataset)
-    return postal_codes
+    return sorted(set(postal_codes))
