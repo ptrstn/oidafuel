@@ -3,7 +3,7 @@
 
 import requests
 
-from oidafuel.datatypes import FuelType
+from oidafuel.datatypes import FuelType, Region, State
 
 BASE_URL = "https://api.e-control.at"
 
@@ -38,7 +38,7 @@ def ping() -> str:
     return response.text
 
 
-def get_regions(include_cities: bool = False) -> list[dict]:
+def get_regions(include_cities: bool = False) -> list[Region]:
     """
     Delivers all possible regions that can be used for the region search
 
@@ -51,10 +51,13 @@ def get_regions(include_cities: bool = False) -> list[dict]:
     url = f"{REGIONS_ENDPOINT}"
     response = requests.get(url, params=parameters)
     json_response = response.json()
-    return json_response
+    regions = [
+        Region.from_response_dict(response_dict) for response_dict in json_response
+    ]
+    return regions
 
 
-def get_administrative_units():
+def get_administrative_units() -> list[State]:
     """
     Delivers all possible administrative units with coordinates
 
@@ -65,7 +68,8 @@ def get_administrative_units():
     url = UNITS_ENDPOINT
     response = requests.get(url)
     json_response = response.json()
-    return json_response
+    units = [State.from_response_dict(response_dict) for response_dict in json_response]
+    return units
 
 
 def search_gas_stations_by_coordinates(
