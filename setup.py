@@ -26,7 +26,7 @@ setup(
     url="http://github.com/ptrstn/oidafuel",
     author="Peter Stein",
     license="MIT",
-    python_requires=">3.7",
+    python_requires=">3.9",
     packages=["oidafuel"],
     install_requires=["requests", "pyproj"],
     entry_points={"console_scripts": ["oidafuel=oidafuel.__main__:main"]},
