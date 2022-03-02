@@ -13,6 +13,18 @@ class RegionType(str, Enum):
     PB = "PB"
 
 
+def instantiate_dataclass_field(klass, dictionary, field):
+    if dictionary[field]:
+        dictionary[field] = klass.from_response_dict(dictionary[field])
+
+
+def instantiate_dataclass_list_field(klass, dictionary, field):
+    if dictionary[field]:
+        dictionary[field] = [
+            klass.from_response_dict(element) for element in dictionary[field]
+        ]
+
+
 @dataclass
 class Region:
     region_code: int
@@ -33,13 +45,7 @@ class Region:
             "cities": "cities",
         }
         kwargs = {mapping[key]: value for key, value in response_dict.items()}
-
-        if kwargs["sub_regions"]:
-            kwargs["sub_regions"] = [
-                cls.from_response_dict(sub_region)
-                for sub_region in kwargs["sub_regions"]
-            ]
-
+        instantiate_dataclass_list_field(cls, kwargs, "sub_regions")
         return cls(**kwargs)
 
 
@@ -99,11 +105,7 @@ class District:
             "n": "name",
         }
         kwargs = {mapping[key]: value for key, value in response_dict.items()}
-        if kwargs["municipalities"]:
-            kwargs["municipalities"] = [
-                Municipality.from_response_dict(municipality)
-                for municipality in kwargs["municipalities"]
-            ]
+        instantiate_dataclass_list_field(Municipality, kwargs, "municipalities")
         return cls(**kwargs)
 
 
@@ -131,9 +133,183 @@ class State:
             "n": "name",
         }
         kwargs = {mapping[key]: value for key, value in response_dict.items()}
-        if kwargs["districts"]:
-            kwargs["districts"] = [
-                District.from_response_dict(district)
-                for district in kwargs["districts"]
-            ]
+        instantiate_dataclass_list_field(District, kwargs, "districts")
         return cls(**kwargs)
+
+
+@dataclass
+class Price:
+    amount: int
+    fuel_type: FuelType
+    label: str
+
+    @classmethod
+    def from_response_dict(cls, response_dict: dict) -> "Price":
+        mapping = {
+            "amount": "amount",
+            "fuelType": "fuel_type",
+            "label": "label",
+        }
+        kwargs = {mapping[key]: value for key, value in response_dict.items()}
+        return cls(**kwargs)
+
+
+@dataclass
+class Location:
+    address: str
+    postal_code: str
+    city: str
+    latitude: float
+    longitude: float
+
+    @classmethod
+    def from_response_dict(cls, response_dict: dict) -> "Location":
+        mapping = {
+            "address": "address",
+            "postalCode": "postal_code",
+            "city": "city",
+            "latitude": "latitude",
+            "longitude": "longitude",
+        }
+        kwargs = {mapping[key]: value for key, value in response_dict.items()}
+        return cls(**kwargs)
+
+
+@dataclass
+class Contact:
+    fax: str = None
+    mail: str = None
+    telephone: str = None
+    website: str = None
+
+    @classmethod
+    def from_response_dict(cls, response_dict: dict) -> "Contact":
+        return cls(**response_dict)
+
+
+@dataclass
+class OpeningHour:
+    day: str
+    label: str
+    order: int
+    from_time: str
+    to_time: str
+
+    @classmethod
+    def from_response_dict(cls, response_dict: dict) -> "OpeningHour":
+        mapping = {
+            "day": "day",
+            "label": "label",
+            "order": "order",
+            "from": "from_time",
+            "to": "to_time",
+        }
+        kwargs = {mapping[key]: value for key, value in response_dict.items()}
+        return cls(**kwargs)
+
+
+@dataclass
+class OfferInformation:
+    service: bool = None
+    self_service: bool = None
+    unattended: bool = None
+
+    @classmethod
+    def from_response_dict(cls, response_dict: dict) -> "OfferInformation":
+        mapping = {
+            "service": "service",
+            "selfService": "self_service",
+            "unattended": "unattended",
+        }
+        kwargs = {mapping[key]: value for key, value in response_dict.items()}
+        return cls(**kwargs)
+
+
+@dataclass
+class PaymentMethods:
+    cash: bool = None
+    debit_card: bool = None
+    credit_card: bool = None
+    others: str = None
+
+    @classmethod
+    def from_response_dict(cls, response_dict: dict) -> "PaymentMethods":
+        mapping = {
+            "cash": "cash",
+            "debitCard": "debit_card",
+            "creditCard": "credit_card",
+            "others": "others",
+        }
+        kwargs = {mapping[key]: value for key, value in response_dict.items()}
+        try:
+            return cls(**kwargs)
+        except TypeError as e:
+            raise e
+
+
+@dataclass
+class PaymentArrangements:
+    access_mod: str = None
+    club_card: bool = None
+    club_card_text: str = None
+    cooperative: bool = None
+
+    @classmethod
+    def from_response_dict(cls, response_dict: dict) -> "PaymentArrangements":
+        mapping = {
+            "accessMod": "access_mod",
+            "clubCard": "club_card",
+            "clubCardText": "club_card_text",
+            "cooperative": "cooperative",
+        }
+        kwargs = {mapping[key]: value for key, value in response_dict.items()}
+        return cls(**kwargs)
+
+
+@dataclass
+class GasStation:
+    identifier: int
+    name: str
+    location: Location
+    open: bool
+    position: int
+    contact: Contact = None
+    opening_hours: list[OpeningHour] = None
+    offer_information: OfferInformation = None
+    payment_methods: PaymentMethods = None
+    payment_arrangements: PaymentArrangements = None
+    distance: float = None
+    prices: list[Price] = None
+    other_service_offers: str = None
+
+    @classmethod
+    def from_response_dict(cls, response_dict: dict) -> "GasStation":
+        mapping = {
+            "id": "identifier",
+            "name": "name",
+            "location": "location",
+            "contact": "contact",
+            "openingHours": "opening_hours",
+            "offerInformation": "offer_information",
+            "paymentMethods": "payment_methods",
+            "paymentArrangements": "payment_arrangements",
+            "position": "position",
+            "open": "open",
+            "distance": "distance",
+            "prices": "prices",
+            "otherServiceOffers": "other_service_offers",
+        }
+        kwargs = {mapping[key]: value for key, value in response_dict.items()}
+
+        instantiate_dataclass_field(Location, kwargs, "location")
+        instantiate_dataclass_field(Contact, kwargs, "contact")
+        instantiate_dataclass_list_field(OpeningHour, kwargs, "opening_hours")
+        instantiate_dataclass_field(OfferInformation, kwargs, "offer_information")
+        instantiate_dataclass_field(PaymentMethods, kwargs, "payment_methods")
+        instantiate_dataclass_field(PaymentArrangements, kwargs, "payment_arrangements")
+        instantiate_dataclass_list_field(Price, kwargs, "prices")
+
+        try:
+            return cls(**kwargs)
+        except TypeError as e:
+            raise e

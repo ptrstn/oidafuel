@@ -3,7 +3,7 @@
 
 import requests
 
-from oidafuel.datatypes import FuelType, Region, State
+from oidafuel.datatypes import FuelType, Region, State, GasStation
 
 BASE_URL = "https://api.e-control.at"
 
@@ -100,7 +100,10 @@ def search_gas_stations_by_coordinates(
 
     response = requests.get(url=url, params=parameters)
     json_response = response.json()
-    return json_response
+    gas_stations = [
+        GasStation.from_response_dict(response_dict) for response_dict in json_response
+    ]
+    return gas_stations
 
 
 def search_gas_stations_by_region(
@@ -131,4 +134,7 @@ def search_gas_stations_by_region(
 
     response = requests.get(url=url, params=parameters)
     json_response = response.json()
-    return json_response
+    gas_stations = [
+        GasStation.from_response_dict(response_dict) for response_dict in json_response
+    ]
+    return gas_stations

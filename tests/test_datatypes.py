@@ -1,4 +1,11 @@
-from oidafuel.datatypes import Region, RegionType, Municipality, District, State
+from oidafuel.datatypes import (
+    Region,
+    RegionType,
+    Municipality,
+    District,
+    State,
+    GasStation,
+)
 
 
 class TestRegion:
@@ -124,3 +131,50 @@ def test_state_from_response_dict():
     assert state.region_code == 99
     assert state.name == "Problems"
     assert not state.districts
+
+
+def test_gas_station_from_response_dict():
+    response_dict = {
+        "id": 1354895,
+        "name": "avanti - Wien Nordbahnstraße 1",
+        "location": {
+            "address": "Nordbahnstrasse 1",
+            "postalCode": "1020",
+            "city": "Wien",
+            "latitude": 48.22912,
+            "longitude": 16.38852,
+        },
+        "contact": {"telephone": "800202055", "fax": "800", "website": "www.omv.com"},
+        "openingHours": [
+            {
+                "day": "MO",
+                "label": "Montag",
+                "order": 1,
+                "from": "00:00",
+                "to": "24:00",
+            },
+            {
+                "day": "FE",
+                "label": "Feiertag",
+                "order": 8,
+                "from": "00:00",
+                "to": "24:00",
+            },
+        ],
+        "offerInformation": {"service": False, "selfService": True, "unattended": True},
+        "paymentMethods": {
+            "cash": False,
+            "debitCard": True,
+            "creditCard": True,
+            "others": "OMV STATIONSKARTE, DKV, MASTERCARD, DINERS, VISA",
+        },
+        "paymentArrangements": {"cooperative": False, "clubCard": False},
+        "position": 1,
+        "open": True,
+        "distance": 1.4750915593739207,
+        "prices": [{"fuelType": "DIE", "amount": 1.519, "label": "Diesel"}],
+    }
+
+    gas_station = GasStation.from_response_dict(response_dict)
+
+    assert gas_station

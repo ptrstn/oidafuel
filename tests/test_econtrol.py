@@ -1,4 +1,5 @@
 import json
+from dataclasses import asdict
 
 from oidafuel.datatypes import FuelType, RegionType
 from oidafuel.econtrol import (
@@ -83,7 +84,7 @@ def test_search_gas_stations_by_coordinates():
     )
     assert len(stations) == 10
 
-    prices = [price for station in stations for price in station["prices"]]
+    prices = [price for station in stations for price in station.prices]
     assert len(prices) >= 5, "At least five cheapest prices"
 
 
@@ -101,6 +102,7 @@ def test_search_gas_stations_by_region():
     )
 
     assert len(stations) >= 5
-    prices = [price for station in stations for price in station["prices"]]
+    prices = [price for station in stations for price in station.prices]
     assert len(prices) >= 5, "At least five cheapest prices"
-    print(json.dumps(stations, indent=2))
+    price_dicts = [asdict(station) for station in stations]
+    print(json.dumps(price_dicts, indent=2, ensure_ascii=False))
