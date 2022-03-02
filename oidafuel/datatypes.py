@@ -241,10 +241,7 @@ class PaymentMethods:
             "others": "others",
         }
         kwargs = {mapping[key]: value for key, value in response_dict.items()}
-        try:
-            return cls(**kwargs)
-        except TypeError as e:
-            raise e
+        return cls(**kwargs)
 
 
 @dataclass
@@ -309,7 +306,4 @@ class GasStation:
         instantiate_dataclass_field(PaymentArrangements, kwargs, "payment_arrangements")
         instantiate_dataclass_list_field(Price, kwargs, "prices")
 
-        try:
-            return cls(**kwargs)
-        except TypeError as e:
-            raise e
+        return cls(**kwargs)
