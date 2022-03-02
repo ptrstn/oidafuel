@@ -7,7 +7,6 @@ from oidafuel.datatypes import FuelType, GasStation
 from oidafuel.econtrol import (
     search_gas_stations_by_coordinates,
     search_gas_stations_by_region,
-    get_regions,
 )
 from oidafuel.utils import epsg_3857_to_epsg_4326
 
