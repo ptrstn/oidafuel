@@ -7,6 +7,7 @@ from oidafuel.datatypes import FuelType, GasStation
 from oidafuel.econtrol import (
     search_gas_stations_by_coordinates,
     search_gas_stations_by_region,
+    get_regions,
 )
 from oidafuel.utils import epsg_3857_to_epsg_4326
 
@@ -77,4 +78,27 @@ def get_gas_prices_by_region(region_code: int, fuel_type: FuelType) -> list[GasP
     region_type = "BL" if region_code < 10 else "PB"
     gas_stations = search_gas_stations_by_region(region_code, region_type, fuel_type)
     gas_prices = gas_stations_to_gas_prices(gas_stations)
+    return gas_prices
+
+
+def get_gas_prices_vienna(fuel_type: FuelType) -> list[GasPrice]:
+    gas_prices = []
+    for region_code in range(900, 923 + 1):
+        print(f"{region_code} {fuel_type}...")
+        gas_prices.extend(get_gas_prices_by_region(region_code, fuel_type))
+    return gas_prices
+
+
+def get_gas_prices_austria(fuel_type: FuelType) -> list[GasPrice]:
+    regions = get_regions()
+    gas_prices = []
+    for region in regions:
+        print(f"{region.name} ({region.region_code}) {fuel_type}...")
+        gas_prices.extend(get_gas_prices_by_region(region.region_code, fuel_type))
+
+        for sub_region in region.sub_regions:
+            print(
+                f"\t{sub_region.name} " f"({sub_region.region_code}) " f"{fuel_type}..."
+            )
+            gas_prices.extend(get_gas_prices_by_region(region.region_code, fuel_type))
     return gas_prices

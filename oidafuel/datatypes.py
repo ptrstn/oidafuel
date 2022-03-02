@@ -266,10 +266,10 @@ class PaymentArrangements:
 @dataclass
 class GasStation:
     identifier: int
-    name: str
     location: Location
     open: bool
     position: int
+    name: str = None
     contact: Contact = None
     opening_hours: list[OpeningHour] = None
     offer_information: OfferInformation = None
