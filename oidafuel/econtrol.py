@@ -77,7 +77,7 @@ def search_gas_stations_by_coordinates(
     longitude: float,
     fuel_type: FuelType,
     include_closed: bool = False,
-):
+) -> list[GasStation]:
     """
     Searches for gas stations at the given location
 
@@ -111,7 +111,7 @@ def search_gas_stations_by_region(
     region_type: str,
     fuel_type: FuelType,
     include_closed: bool = False,
-):
+) -> list[GasStation]:
     """
     Searches for gas stations at the given region
 
