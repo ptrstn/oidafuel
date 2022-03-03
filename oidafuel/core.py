@@ -17,18 +17,18 @@ TIME_FORMAT = "%Y-%m-%d %H:%M"
 @dataclass(frozen=True, order=True)
 class GasPrice:
     station_id: int
-    timestamp: str
     fuel_type: FuelType
     label: str
+    timestamp: str
     price: float
 
     @classmethod
     def from_gas_station(cls, gas_station: GasStation, timestamp: str):
         kwargs = {
             "station_id": gas_station.identifier,
-            "timestamp": timestamp,
             "fuel_type": gas_station.prices[0].fuel_type,
             "label": gas_station.prices[0].label,
+            "timestamp": timestamp,
             "price": gas_station.prices[0].amount,
         }
         return cls(**kwargs)
