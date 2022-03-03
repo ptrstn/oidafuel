@@ -29,7 +29,7 @@ class GasPrice:
         return cls(**kwargs)
 
 
-@dataclass
+@dataclass(frozen=True, order=True)
 class GasStationInfo:
     station_id: int
     name: str
