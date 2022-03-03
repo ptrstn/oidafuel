@@ -1,4 +1,4 @@
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from enum import Enum
 
 
@@ -182,10 +182,10 @@ class Location:
 
 @dataclass(frozen=True, order=True)
 class Contact:
-    fax: str = None
-    mail: str = None
-    telephone: str = None
-    website: str = None
+    fax: str = field(default=None)
+    mail: str = field(default=None)
+    telephone: str = field(default=None)
+    website: str = field(default=None)
 
     @classmethod
     def from_response_dict(cls, response_dict: dict) -> "Contact":
@@ -215,9 +215,9 @@ class OpeningHour:
 
 @dataclass(frozen=True, order=True)
 class OfferInformation:
-    service: bool = None
-    self_service: bool = None
-    unattended: bool = None
+    service: bool = field(default=None)
+    self_service: bool = field(default=None)
+    unattended: bool = field(default=None)
 
     @classmethod
     def from_response_dict(cls, response_dict: dict) -> "OfferInformation":
@@ -232,10 +232,10 @@ class OfferInformation:
 
 @dataclass(frozen=True, order=True)
 class PaymentMethods:
-    cash: bool = None
-    debit_card: bool = None
-    credit_card: bool = None
-    others: str = None
+    cash: bool = field(default=None)
+    debit_card: bool = field(default=None)
+    credit_card: bool = field(default=None)
+    others: str = field(default=None)
 
     @classmethod
     def from_response_dict(cls, response_dict: dict) -> "PaymentMethods":
@@ -251,10 +251,10 @@ class PaymentMethods:
 
 @dataclass(frozen=True, order=True)
 class PaymentArrangements:
-    access_mod: str = None
-    club_card: bool = None
-    club_card_text: str = None
-    cooperative: bool = None
+    access_mod: str = field(default=None)
+    club_card: bool = field(default=None)
+    club_card_text: str = field(default=None)
+    cooperative: bool = field(default=None)
 
     @classmethod
     def from_response_dict(cls, response_dict: dict) -> "PaymentArrangements":
@@ -271,18 +271,28 @@ class PaymentArrangements:
 @dataclass(frozen=True, order=True)
 class GasStation:
     identifier: int
+    name: str
     location: Location
-    open: bool
-    position: int
-    name: str = None
-    contact: Contact = None
-    opening_hours: tuple[OpeningHour] = None
-    offer_information: OfferInformation = None
-    payment_methods: PaymentMethods = None
-    payment_arrangements: PaymentArrangements = None
-    distance: float = None
-    prices: tuple[Price] = None
-    other_service_offers: str = None
+    prices: tuple[Price] = field(default_factory=tuple)
+    open: bool = field(default=None, compare=False, hash=False, repr=False)
+    position: int = field(default=None, compare=False, hash=False, repr=False)
+    contact: Contact = field(default=None, compare=False, hash=False, repr=False)
+    opening_hours: tuple[OpeningHour] = field(
+        default=None, compare=False, hash=False, repr=False
+    )
+    offer_information: OfferInformation = field(
+        default=None, compare=False, hash=False, repr=False
+    )
+    payment_methods: PaymentMethods = field(
+        default=None, compare=False, hash=False, repr=False
+    )
+    payment_arrangements: PaymentArrangements = field(
+        default=None, compare=False, hash=False, repr=False
+    )
+    distance: float = field(default=None, compare=False, hash=False, repr=False)
+    other_service_offers: str = field(
+        default=None, compare=False, hash=False, repr=False
+    )
 
     @classmethod
     def from_response_dict(cls, response_dict: dict, timestamp: str) -> "GasStation":
