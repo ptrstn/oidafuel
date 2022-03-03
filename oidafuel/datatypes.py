@@ -18,11 +18,11 @@ def instantiate_dataclass_field(klass, dictionary, field):
         dictionary[field] = klass.from_response_dict(dictionary[field])
 
 
-def instantiate_dataclass_list_field(klass, dictionary, field):
+def instantiate_dataclass_tuple_field(klass, dictionary, field):
     if dictionary[field]:
-        dictionary[field] = [
+        dictionary[field] = tuple(
             klass.from_response_dict(element) for element in dictionary[field]
-        ]
+        )
 
 
 @dataclass(frozen=True, order=True)
@@ -30,9 +30,9 @@ class Region:
     region_code: int
     region_type: RegionType
     name: str
-    sub_regions: list["Region"]
-    postal_codes: list[str] = None
-    cities: list[str] = None
+    sub_regions: tuple["Region"]
+    postal_codes: tuple[str] = None
+    cities: tuple[str] = None
 
     @classmethod
     def from_response_dict(cls, response_dict: dict) -> "Region":
@@ -45,7 +45,7 @@ class Region:
             "cities": "cities",
         }
         kwargs = {mapping[key]: value for key, value in response_dict.items()}
-        instantiate_dataclass_list_field(cls, kwargs, "sub_regions")
+        instantiate_dataclass_tuple_field(cls, kwargs, "sub_regions")
         return cls(**kwargs)
 
 
@@ -94,7 +94,7 @@ class District:
     """
 
     region_code: int  # Code c
-    municipalities: list[Municipality]  # Gemeinden g
+    municipalities: tuple[Municipality]  # Gemeinden g
     name: str  # Name n
 
     @classmethod
@@ -105,7 +105,7 @@ class District:
             "n": "name",
         }
         kwargs = {mapping[key]: value for key, value in response_dict.items()}
-        instantiate_dataclass_list_field(Municipality, kwargs, "municipalities")
+        instantiate_dataclass_tuple_field(Municipality, kwargs, "municipalities")
         return cls(**kwargs)
 
 
@@ -121,7 +121,7 @@ class State:
     - name (str): Name of the district [n]
     """
 
-    districts: list[District]  # Bezirke b
+    districts: tuple[District]  # Bezirke b
     region_code: int  # Code c
     name: str  # Name n
 
@@ -133,7 +133,7 @@ class State:
             "n": "name",
         }
         kwargs = {mapping[key]: value for key, value in response_dict.items()}
-        instantiate_dataclass_list_field(District, kwargs, "districts")
+        instantiate_dataclass_tuple_field(District, kwargs, "districts")
         return cls(**kwargs)
 
 
@@ -273,12 +273,12 @@ class GasStation:
     position: int
     name: str = None
     contact: Contact = None
-    opening_hours: list[OpeningHour] = None
+    opening_hours: tuple[OpeningHour] = None
     offer_information: OfferInformation = None
     payment_methods: PaymentMethods = None
     payment_arrangements: PaymentArrangements = None
     distance: float = None
-    prices: list[Price] = None
+    prices: tuple[Price] = None
     other_service_offers: str = None
 
     @classmethod
@@ -305,10 +305,10 @@ class GasStation:
 
         instantiate_dataclass_field(Location, kwargs, "location")
         instantiate_dataclass_field(Contact, kwargs, "contact")
-        instantiate_dataclass_list_field(OpeningHour, kwargs, "opening_hours")
+        instantiate_dataclass_tuple_field(OpeningHour, kwargs, "opening_hours")
         instantiate_dataclass_field(OfferInformation, kwargs, "offer_information")
         instantiate_dataclass_field(PaymentMethods, kwargs, "payment_methods")
         instantiate_dataclass_field(PaymentArrangements, kwargs, "payment_arrangements")
-        instantiate_dataclass_list_field(Price, kwargs, "prices")
+        instantiate_dataclass_tuple_field(Price, kwargs, "prices")
 
         return cls(**kwargs)

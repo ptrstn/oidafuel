@@ -180,3 +180,6 @@ def test_gas_station_from_response_dict():
     gas_station = GasStation.from_response_dict(response_dict, timestamp)
     assert gas_station
     assert gas_station.prices[0].timestamp == timestamp
+
+    gas_station_set = {gas_station}
+    assert gas_station_set
