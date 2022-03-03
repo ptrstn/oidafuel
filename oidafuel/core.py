@@ -14,7 +14,7 @@ TIME_ZONE = ZoneInfo("Europe/Vienna")
 TIME_FORMAT = "%Y-%m-%d %H:%M"
 
 
-@dataclass
+@dataclass(frozen=True, order=True)
 class GasPrice:
     station_id: int
     timestamp: str

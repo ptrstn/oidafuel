@@ -25,7 +25,7 @@ def instantiate_dataclass_list_field(klass, dictionary, field):
         ]
 
 
-@dataclass
+@dataclass(frozen=True, order=True)
 class Region:
     region_code: int
     region_type: RegionType
@@ -49,7 +49,7 @@ class Region:
         return cls(**kwargs)
 
 
-@dataclass
+@dataclass(frozen=True, order=True)
 class Municipality:
     """
     Gemeinde (g)
@@ -80,7 +80,7 @@ class Municipality:
         return cls(**kwargs)
 
 
-@dataclass
+@dataclass(frozen=True, order=True)
 class District:
     """
     Bezirk (b)
@@ -109,7 +109,7 @@ class District:
         return cls(**kwargs)
 
 
-@dataclass
+@dataclass(frozen=True, order=True)
 class State:
     """
     Bundesland (b)
@@ -137,7 +137,7 @@ class State:
         return cls(**kwargs)
 
 
-@dataclass
+@dataclass(frozen=True, order=True)
 class Price:
     amount: int
     fuel_type: FuelType
@@ -154,7 +154,7 @@ class Price:
         return cls(**kwargs)
 
 
-@dataclass
+@dataclass(frozen=True, order=True)
 class Location:
     address: str
     postal_code: str
@@ -175,7 +175,7 @@ class Location:
         return cls(**kwargs)
 
 
-@dataclass
+@dataclass(frozen=True, order=True)
 class Contact:
     fax: str = None
     mail: str = None
@@ -187,7 +187,7 @@ class Contact:
         return cls(**response_dict)
 
 
-@dataclass
+@dataclass(frozen=True, order=True)
 class OpeningHour:
     day: str
     label: str
@@ -208,7 +208,7 @@ class OpeningHour:
         return cls(**kwargs)
 
 
-@dataclass
+@dataclass(frozen=True, order=True)
 class OfferInformation:
     service: bool = None
     self_service: bool = None
@@ -225,7 +225,7 @@ class OfferInformation:
         return cls(**kwargs)
 
 
-@dataclass
+@dataclass(frozen=True, order=True)
 class PaymentMethods:
     cash: bool = None
     debit_card: bool = None
@@ -244,7 +244,7 @@ class PaymentMethods:
         return cls(**kwargs)
 
 
-@dataclass
+@dataclass(frozen=True, order=True)
 class PaymentArrangements:
     access_mod: str = None
     club_card: bool = None
@@ -263,7 +263,7 @@ class PaymentArrangements:
         return cls(**kwargs)
 
 
-@dataclass
+@dataclass(frozen=True, order=True)
 class GasStation:
     identifier: int
     location: Location

@@ -5,7 +5,7 @@ from urllib.parse import quote
 import requests
 
 
-@dataclass
+@dataclass(frozen=True, order=True)
 class Address:
     """
     x and y coordinates are using the EPSG:3857 system
