@@ -55,31 +55,12 @@ def get_gas_stations_by_region(
 
 
 def gas_stations_to_gas_prices(gas_stations: list[GasStation]) -> list[GasPrice]:
-    gas_stations_with_price = [
-        gas_station for gas_station in gas_stations if gas_station.prices
-    ]
+    """
+    Returns a list of gas prices by checking each gas station if it contains a price
+    """
     gas_prices = [
         GasPrice.from_gas_station(gas_station)
-        for gas_station in gas_stations_with_price
+        for gas_station in gas_stations
+        if gas_station.prices
     ]
-    return gas_prices
-
-
-def get_gas_prices_by_coordinates(
-    latitude: float, longitude: float, fuel_type: FuelType
-) -> list[GasPrice]:
-    gas_stations = get_gas_stations_by_coordinates(latitude, longitude, fuel_type)
-    gas_prices = gas_stations_to_gas_prices(gas_stations)
-    return gas_prices
-
-
-def get_gas_prices_by_address(address_text: str, fuel_type: FuelType) -> list[GasPrice]:
-    gas_stations = get_gas_stations_by_address(address_text, fuel_type)
-    gas_prices = gas_stations_to_gas_prices(gas_stations)
-    return gas_prices
-
-
-def get_gas_prices_by_region(region_code: int, fuel_type: FuelType) -> list[GasPrice]:
-    gas_stations = get_gas_stations_by_region(region_code, fuel_type)
-    gas_prices = gas_stations_to_gas_prices(gas_stations)
     return gas_prices
