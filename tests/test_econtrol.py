@@ -86,6 +86,8 @@ def test_search_gas_stations_by_coordinates():
 
     prices = [price for station in stations for price in station.prices]
     assert len(prices) >= 5, "At least five cheapest prices"
+    assert stations[0].prices[0].timestamp.startswith("20")
+    assert not stations[-1].prices
 
 
 def test_search_gas_stations_by_region():

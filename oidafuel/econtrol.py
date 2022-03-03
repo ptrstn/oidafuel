@@ -1,5 +1,7 @@
 # Python client to the Spritpreisrechner-API:
 # https://api.e-control.at/sprit/1.0/doc/index.html?url=https://api.e-control.at/sprit/1.0/api-docs%3Fgroup%3Dpublic-api
+from datetime import datetime
+from zoneinfo import ZoneInfo
 
 import requests
 
@@ -23,6 +25,9 @@ REGIONS_ENDPOINT = f"{BASE_ENDPOINT}{REGIONS_PATH}"
 UNITS_ENDPOINT = f"{BASE_ENDPOINT}{UNITS_PATH}"
 GAS_STATIONS_BY_ADDRESS_ENDPOINT = f"{BASE_ENDPOINT}{GAS_STATIONS_BY_ADDRESS_PATH}"
 GAS_STATIONS_BY_REGION_ENDPOINT = f"{BASE_ENDPOINT}{GAS_STATIONS_BY_REGION_PATH}"
+
+TIME_ZONE = ZoneInfo("Europe/Vienna")
+TIME_FORMAT = "%Y-%m-%d %H:%M"
 
 
 def ping() -> str:
@@ -75,8 +80,11 @@ def get_administrative_units() -> list[State]:
 def _search_gas_stations(url: str, parameters: dict) -> list[GasStation]:
     response = requests.get(url=url, params=parameters)
     json_response = response.json()
+    timestamp = datetime.now(tz=TIME_ZONE).strftime(TIME_FORMAT)
+
     gas_stations = [
-        GasStation.from_response_dict(response_dict) for response_dict in json_response
+        GasStation.from_response_dict(response_dict, timestamp)
+        for response_dict in json_response
     ]
     return gas_stations
 

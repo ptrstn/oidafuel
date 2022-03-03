@@ -175,6 +175,8 @@ def test_gas_station_from_response_dict():
         "prices": [{"fuelType": "DIE", "amount": 1.519, "label": "Diesel"}],
     }
 
-    gas_station = GasStation.from_response_dict(response_dict)
+    timestamp = "2022-03-03 03:54"
 
+    gas_station = GasStation.from_response_dict(response_dict, timestamp)
     assert gas_station
+    assert gas_station.prices[0].timestamp == timestamp

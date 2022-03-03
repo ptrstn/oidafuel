@@ -1,6 +1,4 @@
 from dataclasses import dataclass
-from datetime import datetime
-from zoneinfo import ZoneInfo
 
 from oidafuel.address import search_address
 from oidafuel.datatypes import FuelType, GasStation
@@ -9,9 +7,6 @@ from oidafuel.econtrol import (
     search_gas_stations_by_region,
 )
 from oidafuel.utils import epsg_3857_to_epsg_4326
-
-TIME_ZONE = ZoneInfo("Europe/Vienna")
-TIME_FORMAT = "%Y-%m-%d %H:%M"
 
 
 @dataclass(frozen=True, order=True)
@@ -23,12 +18,12 @@ class GasPrice:
     price: float
 
     @classmethod
-    def from_gas_station(cls, gas_station: GasStation, timestamp: str):
+    def from_gas_station(cls, gas_station: GasStation):
         kwargs = {
             "station_id": gas_station.identifier,
             "fuel_type": gas_station.prices[0].fuel_type,
             "label": gas_station.prices[0].label,
-            "timestamp": timestamp,
+            "timestamp": gas_station.prices[0].timestamp,
             "price": gas_station.prices[0].amount,
         }
         return cls(**kwargs)
@@ -38,9 +33,8 @@ def gas_stations_to_gas_prices(gas_stations: list[GasStation]) -> list[GasPrice]
     gas_stations_with_price = [
         gas_station for gas_station in gas_stations if gas_station.prices
     ]
-    timestamp = datetime.now(tz=TIME_ZONE).strftime(TIME_FORMAT)
     gas_prices = [
-        GasPrice.from_gas_station(gas_station, timestamp)
+        GasPrice.from_gas_station(gas_station)
         for gas_station in gas_stations_with_price
     ]
     return gas_prices

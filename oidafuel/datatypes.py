@@ -139,9 +139,10 @@ class State:
 
 @dataclass(frozen=True, order=True)
 class Price:
-    amount: int
     fuel_type: FuelType
     label: str
+    timestamp: str
+    amount: int
 
     @classmethod
     def from_response_dict(cls, response_dict: dict) -> "Price":
@@ -149,6 +150,7 @@ class Price:
             "amount": "amount",
             "fuelType": "fuel_type",
             "label": "label",
+            "timestamp": "timestamp",
         }
         kwargs = {mapping[key]: value for key, value in response_dict.items()}
         return cls(**kwargs)
@@ -280,7 +282,7 @@ class GasStation:
     other_service_offers: str = None
 
     @classmethod
-    def from_response_dict(cls, response_dict: dict) -> "GasStation":
+    def from_response_dict(cls, response_dict: dict, timestamp: str) -> "GasStation":
         mapping = {
             "id": "identifier",
             "name": "name",
@@ -297,6 +299,9 @@ class GasStation:
             "otherServiceOffers": "other_service_offers",
         }
         kwargs = {mapping[key]: value for key, value in response_dict.items()}
+
+        for price in kwargs["prices"]:
+            price["timestamp"] = timestamp
 
         instantiate_dataclass_field(Location, kwargs, "location")
         instantiate_dataclass_field(Contact, kwargs, "contact")
