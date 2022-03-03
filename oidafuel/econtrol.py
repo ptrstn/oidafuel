@@ -72,6 +72,15 @@ def get_administrative_units() -> list[State]:
     return units
 
 
+def _search_gas_stations(url: str, parameters: dict) -> list[GasStation]:
+    response = requests.get(url=url, params=parameters)
+    json_response = response.json()
+    gas_stations = [
+        GasStation.from_response_dict(response_dict) for response_dict in json_response
+    ]
+    return gas_stations
+
+
 def search_gas_stations_by_coordinates(
     latitude: float,
     longitude: float,
@@ -98,11 +107,7 @@ def search_gas_stations_by_coordinates(
         "includeClosed": include_closed,
     }
 
-    response = requests.get(url=url, params=parameters)
-    json_response = response.json()
-    gas_stations = [
-        GasStation.from_response_dict(response_dict) for response_dict in json_response
-    ]
+    gas_stations = _search_gas_stations(url, parameters)
     return gas_stations
 
 
@@ -132,9 +137,5 @@ def search_gas_stations_by_region(
         "includeClosed": include_closed,
     }
 
-    response = requests.get(url=url, params=parameters)
-    json_response = response.json()
-    gas_stations = [
-        GasStation.from_response_dict(response_dict) for response_dict in json_response
-    ]
+    gas_stations = _search_gas_stations(url, parameters)
     return gas_stations
