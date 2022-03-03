@@ -271,8 +271,8 @@ class PaymentArrangements:
 @dataclass(frozen=True, order=True)
 class GasStation:
     identifier: int
-    name: str
     location: Location
+    name: str = field(default=None)
     prices: tuple[Price] = field(default_factory=tuple)
     open: bool = field(default=None, compare=False, hash=False, repr=False)
     position: int = field(default=None, compare=False, hash=False, repr=False)
