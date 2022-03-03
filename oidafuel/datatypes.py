@@ -14,15 +14,13 @@ class RegionType(str, Enum):
 
 
 def instantiate_dataclass_field(klass, dictionary, field):
-    if dictionary[field]:
-        dictionary[field] = klass.from_response_dict(dictionary[field])
+    dictionary[field] = klass.from_response_dict(dictionary[field])
 
 
 def instantiate_dataclass_tuple_field(klass, dictionary, field):
-    if dictionary[field]:
-        dictionary[field] = tuple(
-            klass.from_response_dict(element) for element in dictionary[field]
-        )
+    dictionary[field] = tuple(
+        klass.from_response_dict(element) for element in dictionary[field]
+    )
 
 
 @dataclass(frozen=True, order=True)
@@ -45,6 +43,11 @@ class Region:
             "cities": "cities",
         }
         kwargs = {mapping[key]: value for key, value in response_dict.items()}
+
+        for key, value in kwargs.items():
+            if isinstance(value, list):
+                kwargs[key] = tuple(value)
+
         instantiate_dataclass_tuple_field(cls, kwargs, "sub_regions")
         return cls(**kwargs)
 

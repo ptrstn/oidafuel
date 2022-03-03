@@ -19,6 +19,7 @@ def test_ping():
 def test_get_regions():
     regions = get_regions()
 
+    assert set(regions)
     assert len(regions) == 9
     assert regions[0].region_code == 1
     assert regions[0].name == "Burgenland"
@@ -29,6 +30,7 @@ def test_get_regions():
 
     regions = get_regions(include_cities=True)
 
+    assert set(regions)
     assert len(regions) == 9, "Should be 9 Austrian states"
     assert regions[0].region_code == 1
     assert regions[0].region_type == "BL"
