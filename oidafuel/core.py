@@ -16,32 +16,20 @@ TIME_FORMAT = "%Y-%m-%d %H:%M"
 
 @dataclass
 class GasPrice:
-    identifier: int
-    name: str
-    address: str
-    city: str
-    postal_code: str
-    latitude: float
-    longitude: float
+    station_id: int
+    timestamp: str
     fuel_type: FuelType
     label: str
     price: float
-    timestamp: str
 
     @classmethod
     def from_gas_station(cls, gas_station: GasStation, timestamp: str):
         kwargs = {
-            "identifier": gas_station.identifier,
-            "name": gas_station.name,
-            "address": gas_station.location.address,
-            "city": gas_station.location.city,
-            "postal_code": gas_station.location.postal_code,
-            "latitude": gas_station.location.latitude,
-            "longitude": gas_station.location.longitude,
+            "station_id": gas_station.identifier,
+            "timestamp": timestamp,
             "fuel_type": gas_station.prices[0].fuel_type,
             "label": gas_station.prices[0].label,
             "price": gas_station.prices[0].amount,
-            "timestamp": timestamp,
         }
         return cls(**kwargs)
 
