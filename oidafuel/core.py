@@ -29,6 +29,30 @@ class GasPrice:
         return cls(**kwargs)
 
 
+@dataclass
+class GasStationInfo:
+    station_id: int
+    name: str
+    address: str
+    postal_code: str
+    city: str
+    latitude: float
+    longitude: float
+
+    @classmethod
+    def from_gas_station(cls, gas_station: GasStation):
+        kwargs = {
+            "station_id": gas_station.identifier,
+            "name": gas_station.name,
+            "address": gas_station.location.address,
+            "postal_code": gas_station.location.postal_code,
+            "city": gas_station.location.city,
+            "latitude": gas_station.location.latitude,
+            "longitude": gas_station.location.longitude,
+        }
+        return cls(**kwargs)
+
+
 def get_gas_stations_by_coordinates(
     latitude: float, longitude: float, fuel_type: FuelType
 ) -> list[GasStation]:
