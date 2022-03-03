@@ -29,6 +29,31 @@ class GasPrice:
         return cls(**kwargs)
 
 
+def get_gas_stations_by_coordinates(
+    latitude: float, longitude: float, fuel_type: FuelType
+) -> list[GasStation]:
+    gas_stations = search_gas_stations_by_coordinates(latitude, longitude, fuel_type)
+    return gas_stations
+
+
+def get_gas_stations_by_address(
+    address_text: str, fuel_type: FuelType
+) -> list[GasStation]:
+    addresses = search_address(text=address_text)
+    address = addresses[0]
+    latitude, longitude = epsg_3857_to_epsg_4326(address.x, address.y)
+    gas_stations = get_gas_stations_by_coordinates(latitude, longitude, fuel_type)
+    return gas_stations
+
+
+def get_gas_stations_by_region(
+    region_code: int, fuel_type: FuelType
+) -> list[GasStation]:
+    region_type = "BL" if region_code < 10 else "PB"
+    gas_stations = search_gas_stations_by_region(region_code, region_type, fuel_type)
+    return gas_stations
+
+
 def gas_stations_to_gas_prices(gas_stations: list[GasStation]) -> list[GasPrice]:
     gas_stations_with_price = [
         gas_station for gas_station in gas_stations if gas_station.prices
@@ -43,20 +68,18 @@ def gas_stations_to_gas_prices(gas_stations: list[GasStation]) -> list[GasPrice]
 def get_gas_prices_by_coordinates(
     latitude: float, longitude: float, fuel_type: FuelType
 ) -> list[GasPrice]:
-    gas_stations = search_gas_stations_by_coordinates(latitude, longitude, fuel_type)
+    gas_stations = get_gas_stations_by_coordinates(latitude, longitude, fuel_type)
     gas_prices = gas_stations_to_gas_prices(gas_stations)
     return gas_prices
 
 
 def get_gas_prices_by_address(address_text: str, fuel_type: FuelType) -> list[GasPrice]:
-    addresses = search_address(text=address_text)
-    address = addresses[0]
-    latitude, longitude = epsg_3857_to_epsg_4326(address.x, address.y)
-    return get_gas_prices_by_coordinates(latitude, longitude, fuel_type)
+    gas_stations = get_gas_stations_by_address(address_text, fuel_type)
+    gas_prices = gas_stations_to_gas_prices(gas_stations)
+    return gas_prices
 
 
 def get_gas_prices_by_region(region_code: int, fuel_type: FuelType) -> list[GasPrice]:
-    region_type = "BL" if region_code < 10 else "PB"
-    gas_stations = search_gas_stations_by_region(region_code, region_type, fuel_type)
+    gas_stations = get_gas_stations_by_region(region_code, fuel_type)
     gas_prices = gas_stations_to_gas_prices(gas_stations)
     return gas_prices
