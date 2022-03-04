@@ -29,8 +29,8 @@ class Region:
     region_type: RegionType
     name: str
     sub_regions: tuple["Region"]
-    postal_codes: tuple[str] = None
-    cities: tuple[str] = None
+    postal_codes: tuple[str] = field(default_factory=tuple)
+    cities: tuple[str] = field(default_factory=tuple)
 
     @classmethod
     def from_response_dict(cls, response_dict: dict) -> "Region":
@@ -92,7 +92,7 @@ class District:
     of the executive arm of the country's government in Austria.
 
     - region_code (int): Postal code of the municipality [c]
-    - municipalities (list[Municipality]): List of the municipalities (Gemeinden) [g]
+    - municipalities (tuple[Municipality]): List of the municipalities (Gemeinden) [g]
     - name (str): Name of the district [n]
     """
 
@@ -119,7 +119,7 @@ class State:
 
     Austria is a made up of nine states (German: Bundesländer)
 
-    - districts (list[District]): b List of the districts (Bezirke) in the state [b]
+    - districts (tuple[District]): b List of the districts (Bezirke) in the state [b]
     - region_code (int): Postal code of the state [c]
     - name (str): Name of the district [n]
     """
@@ -278,7 +278,7 @@ class GasStation:
     position: int = field(default=None, compare=False, hash=False, repr=False)
     contact: Contact = field(default=None, compare=False, hash=False, repr=False)
     opening_hours: tuple[OpeningHour] = field(
-        default=None, compare=False, hash=False, repr=False
+        default_factory=tuple, compare=False, hash=False, repr=False
     )
     offer_information: OfferInformation = field(
         default=None, compare=False, hash=False, repr=False
