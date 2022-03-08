@@ -1,7 +1,7 @@
 import json
 from dataclasses import asdict
 
-from oidafuel.datatypes import FuelType, RegionType
+from oidafuel.datatypes import FuelType, RegionType, GasStation
 from oidafuel.econtrol import (
     ping,
     get_regions,
@@ -110,3 +110,33 @@ def test_search_gas_stations_by_region():
     assert len(prices) >= 5, "At least five cheapest prices"
     price_dicts = [asdict(station) for station in stations]
     print(json.dumps(price_dicts, indent=2, ensure_ascii=False))
+
+
+def test_no_address():
+    latitude = 48.588531
+    longitude = 15.273184
+    postal_code = "3533"
+    city = "Friedersbach 120"
+    name = "AVIA mit Bedienung"
+
+    fuel_type = FuelType.DIESEL
+    include_closed = False
+    stations: list[GasStation] = search_gas_stations_by_coordinates(
+        latitude=latitude,
+        longitude=longitude,
+        fuel_type=fuel_type,
+        include_closed=include_closed,
+    )
+
+    avia = list(filter(lambda station: station.name == name, stations))
+
+    assert len(avia) == 1
+
+    avia = avia[0]
+
+    assert avia.name == name
+    assert avia.location.latitude == latitude
+    assert avia.location.longitude == longitude
+    assert avia.location.city == city
+    assert avia.location.postal_code == postal_code
+    assert avia.location.address is None

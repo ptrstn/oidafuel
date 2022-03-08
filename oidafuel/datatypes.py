@@ -161,11 +161,11 @@ class Price:
 
 @dataclass(frozen=True, order=True)
 class Location:
-    address: str
     postal_code: str
     city: str
     latitude: float
     longitude: float
+    address: str = None
 
     @classmethod
     def from_response_dict(cls, response_dict: dict) -> "Location":
